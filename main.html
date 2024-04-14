@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Prem Draft API</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+
+
+    <div style="display:none; width: fit-content;">
+        <p id="input"></p>
+        <textarea id="output" cols="60" style=""></textarea>
+    </div>
+    <div style="display:inline-block; width: fit-content;">
+
+        <!-- <p id="output2" style=""></p> -->
+        <table id="output2"></table>
+    </div>
+    <div style="display:inline-block; width: fit-content;">
+        <p id="input3"></p>
+        <p id="output3" cols="60" style=""></p>
+    </div>
+
+    <script type="module">
+        const outputNode = document.getElementById('output')
+        const outputNode2 = document.getElementById('output2')
+
+
+        const TARGET_URL2 = 'https://draft.premierleague.com/api/league/10699/details'
+
+        function getTeamDetails() {
+            const TARGET_URL = 'https://draft.premierleague.com/api/entry/36911/event/33'
+            //const URL = TARGET_URL
+            const URL = `http://localhost:8088/${TARGET_URL}`
+            var teamDetailsJSON = await fetch(URL)
+                .then((response) => response.json())
+                .then((data) => outputNode.textContent = JSON.stringify(data, null, 2))
+                .catch((exception) => {
+                    outputNode.textContent = exception
+                })
+        }
+
+        const URL2 = `http://localhost:8088/${TARGET_URL2}`
+        var leagueDetailsJSON = await fetch(URL2)
+            .then((response) => response.json())
+            //.then((data) => outputNode2.textContent = JSON.stringify(data, null, 2))
+            .catch((exception) => {
+                outputNode2.textContent = exception
+            })
+
+        var gameWeek33MatchesJSON = leagueDetailsJSON.matches.filter(function (entry) { return entry.event === 33; })
+
+
+        console.log(leagueDetailsJSON)
+
+        console.log(gameWeek33MatchesJSON)
+
+        for (let i = 0; i < gameWeek33MatchesJSON.length; i++) {
+            outputNode2.innerHTML += "<tr><td style='text-align:right'>" + getTeamNames(gameWeek33MatchesJSON[i].league_entry_1) + "</td><td style='text-align:center; width:100px' > <a href='http://www.google.co.uk'>" + JSON.stringify(gameWeek33MatchesJSON[i].league_entry_1_points) + "-" + JSON.stringify(gameWeek33MatchesJSON[i].league_entry_2_points) + "</a></td><td style='text-align:left'>" + getTeamNames(gameWeek33MatchesJSON[i].league_entry_2) + "</td></tr>"
+        }
+
+        console.log(gameWeek33MatchesJSON[0])
+
+
+        function getTeamNames(id) {
+
+            var leagueEntry = leagueDetailsJSON.league_entries.filter(function (entry) { return entry.id === id })
+
+            return leagueEntry[0].player_first_name
+        }
+
+        console.log(getTeamNames(36979))
+
+
+    </script>
+</body>
+
+</html>
