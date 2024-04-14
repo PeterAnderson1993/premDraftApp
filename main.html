@@ -32,9 +32,8 @@
 
         const TARGET_URL2 = 'https://draft.premierleague.com/api/league/10699/details'
 
-        function getTeamDetails() {
-            const TARGET_URL = 'https://draft.premierleague.com/api/entry/36911/event/33'
-            //const URL = TARGET_URL
+        async function getTeamDetails(league_entry_id) {
+            const TARGET_URL = `https://draft.premierleague.com/api/entry/${league_entry_id}/event/33`
             const URL = `http://localhost:8088/${TARGET_URL}`
             var teamDetailsJSON = await fetch(URL)
                 .then((response) => response.json())
